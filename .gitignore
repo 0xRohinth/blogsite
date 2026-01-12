@@ -1,0 +1,6 @@
+# Ignore generated HTML files
+index.html
+*.html 
+# Ignore node modules
+node_modules/
+*.json
