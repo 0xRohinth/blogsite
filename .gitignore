@@ -1,6 +1,13 @@
-# Ignore generated HTML files
-index.html
-*.html 
-# Ignore node modules
+# Dependencies
 node_modules/
-*.json
+
+# Logs & Environment
+*.log
+.env
+.env.local
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

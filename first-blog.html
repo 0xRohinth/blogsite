@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><!-- POST_TITLE --> // 0xRohinth CTF Writeup</title>
+    <title>Welcome to 0xRohinth's Security & Writeups Blog // 0xRohinth CTF Writeup</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/main.css">
 </head>
@@ -33,35 +33,86 @@
                 <!-- Article Header -->
                 <header class="mb-8 pb-6 border-b border-slate-800">
                     <div class="flex items-center gap-3 mb-4">
-                        <span class="category-tag"><!-- POST_CATEGORY --></span>
+                        <span class="category-tag">Web</span>
                         <span class="text-xs font-mono text-slate-500">//</span>
-                        <span class="text-xs font-mono text-slate-400"><!-- POST_READ_TIME --></span>
+                        <span class="text-xs font-mono text-slate-400">2 min read</span>
                     </div>
 
                     <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
-                        <!-- POST_TITLE -->
+                        Welcome to 0xRohinth's Security & Writeups Blog
                     </h1>
 
                     <div class="flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-400 pt-2">
                         <div class="flex items-center gap-2">
                             <span>PUBLISHED:</span>
-                            <span class="text-cyan-400"><!-- POST_DATE --></span>
+                            <span class="text-cyan-400">2025-10-13</span>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <!-- POST_TAGS -->
+                            <span class="category-tag">#StaticSite</span> <span class="category-tag">#NodeJS</span> <span class="category-tag">#Tailwind</span> <span class="category-tag">#DarkTheme</span>
                         </div>
                     </div>
                 </header>
 
                 <!-- CTF Machine Specs Box (if present) -->
-                <!-- POST_SPECS -->
+                
+    <div class="ctf-specs-grid">
+      <div class="ctf-spec-item"><span class="ctf-spec-label">PLATFORM</span><span class="ctf-spec-value">Blog Meta</span></div>
+      
+      
+      
+      <div class="ctf-spec-item"><span class="ctf-spec-label">DIFFICULTY</span><span class="ctf-spec-value"><span class="cyber-badge badge-diff-easy">easy</span></span></div>
+    </div>
 
                 <!-- Optional Hero Image -->
-                <!-- HERO_IMAGE -->
+                
+  <div class="mb-8 rounded-lg overflow-hidden border border-slate-700 shadow-xl">
+    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop" alt="Welcome to 0xRohinth's Security & Writeups Blog" onclick="openLightbox(this.src)" class="w-full h-64 md:h-80 object-cover cursor-pointer hover:scale-105 transition-transform duration-300" />
+  </div>
 
                 <!-- Article Content -->
                 <div class="post-content">
-                    <!-- POST_CONTENT -->
+                    <h1>Welcome to 0xRohinth&#39;s Security &amp; Writeups Blog</h1>
+<p>Welcome to my central knowledge hub for <strong>CTF machine walkthroughs, penetration testing notes, and security research</strong>.</p>
+<p>This site is custom-built with a lightweight static generator using <strong>Node.js</strong>, <strong>Markdown</strong>, and a custom <strong>Hacker / CTF Dark Theme</strong>.</p>
+<hr>
+<h2>🛠 Features of This Blog</h2>
+<ul>
+<li>⚡ <strong>Ultra Fast Static Build</strong>: Pure Node.js markdown parsing without heavy frameworks.</li>
+<li>🎯 <strong>CTF Walkthrough Format</strong>: Machine specs, difficulty badges, target IP indicators, and flag notes.</li>
+<li>🎨 <strong>Dark Theme &amp; Lightbox Images</strong>: Click any screenshot or image to expand it in full high resolution.</li>
+<li>📋 <strong>Code Snippet Copy Buttons</strong>: Instant copy-paste for commands and scripts.</li>
+<li>🔍 <strong>Instant Search &amp; Category Filters</strong>: Filter writeups by Web, Pwn, Reverse, Forensics, and difficulty.</li>
+</ul>
+<hr>
+<h2>📝 Markdown Structure for Writeups</h2>
+<p>Writing a new CTF post is as simple as adding a <code>.md</code> file to <code>/posts</code> with frontmatter:</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">MARKDOWN</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-markdown">---
+title: &quot;Box Name Walkthrough&quot;
+date: &quot;2026-03-15&quot;
+category: &quot;Pwn&quot;
+difficulty: &quot;Medium&quot;
+platform: &quot;HackTheBox&quot;
+os: &quot;Linux&quot;
+ip: &quot;10.10.10.15&quot;
+points: &quot;30&quot;
+tags: [&quot;Nmap&quot;, &quot;PrivEsc&quot;]
+---</code></pre>
+  </div><p>After adding your post, simply run:</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">BASH</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-bash">npm run build</code></pre>
+  </div><p>The script converts your markdown files into clean static HTML pages ready for <strong>GitHub Pages</strong>!</p>
+
                 </div>
 
                 <!-- Article Footer / Navigation -->

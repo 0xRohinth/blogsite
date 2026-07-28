@@ -1,253 +1,148 @@
-# 📝 Static Markdown Blog Generator (Node.js + TailwindCSS)
+# 🏴‍☠️ 0xRohinth // Hacker & CTF Writeup Static Blog
 
-A **minimal, fast, and fully customizable static blog generator** built using **Node.js**, **Markdown**, and **TailwindCSS** — no frameworks, no bloat.  
-Just write your posts in `.md`, run one command, and your clean static site is ready 🚀
+[![Deploy Blog to GitHub Pages](https://github.com/0xRohinth/blogsite/actions/workflows/deploy.yml/badge.svg)](https://github.com/0xRohinth/blogsite/actions/workflows/deploy.yml)
+![Node.js Version](https://img.shields.io/badge/Node.js-v18%2B-00ff9d?style=flat-square&logo=node.js)
+![Theme](https://img.shields.io/badge/Theme-Blue%20Team%20Cyan-58a6ff?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-purple?style=flat-square)
 
----
-
-## 🌟 Features
-
-- ⚡ **Lightweight & Fast** — Pure Node.js script, no build frameworks
-    
-- 🧠 **Front Matter Support** (`title`, `date`, `image`, `tags`)
-    
-- 🎨 **TailwindCSS Styling** — Beautiful responsive layouts out of the box
-    
-- 🌓 **Dark/Light Theme Toggle** with localStorage memory
-    
-- 🗂️ **Auto-generated Index Page** — Lists posts with images, dates, and tags
-    
-- 🧩 **Customizable Templates** — Edit HTML & Tailwind styles easily
-    
+A lightweight, high-performance static blog generator built with **Node.js**, **Markdown**, and **Dark-Theme CSS**. Specially designed for **Cybersecurity Professionals**, **CTF Players**, and **DevOps Engineers** to write and publish machine walkthroughs with zero framework bloat.
 
 ---
 
-## 📁 Folder Structure
+## 🌟 Key Features
 
-```
-blog-site/
+- 🎯 **CTF Machine Metadata Box**: Automatically formats target specifications (Target IP, OS, Platform, Points, Difficulty Badges).
+- 🔍 **Instant Search & Category Filtering**: Client-side instant filtering across titles, tags, and categories (`Web`, `Pwn`, `Reverse`, `Crypto`, `Forensics`, `DevOps`).
+- 🖼️ **Image Lightbox Viewer**: Click any screenshot or diagram to view it in high-resolution full-screen modal mode.
+- 📋 **One-Click Code Copy**: Embedded copy buttons on all code blocks with toast feedback.
+- ⚡ **Zero Heavy Build Frameworks**: Fast, pure Node.js build pipeline powered by `marked` and `gray-matter`.
+- 🤖 **GitHub Actions CI/CD**: Automatic build and deployment to **GitHub Pages** whenever you push a markdown file.
+
+---
+
+## 📁 Repository Structure
+
+```text
+blogsite/
 │
-├── posts/                     # Your markdown posts (.md)
-│   ├── first-post.md
-│   ├── second-post.md
+├── posts/                     # Markdown post files (.md)
+│   ├── sample-ctf-writeup.md  # Example HTB / CTF walkthrough
+│   ├── devops.md              # DevOps security guide
+│   └── first-blog.md          # Intro post
 │
 ├── scripts/
-│   └── build.js               # Main build script (Markdown → HTML)
+│   └── build.js               # Core static generator engine (Markdown -> HTML)
 │
-├── template.html              # Homepage template
-├── post-template.html         # Individual post template
+├── css/
+│   └── main.css               # Cyber dark theme design system
 │
-├── index.html                 # Auto-generated after build
-├── package.json               # Dependencies (optional)
-└── README.md
-
+├── template.html              # Homepage layout template
+├── post-template.html         # Individual writeup page template
+│
+├── .github/
+│   └── workflows/
+│       └── deploy.yml         # GitHub Actions deployment workflow
+│
+├── index.html                 # Generated homepage
+├── package.json               # Dependencies & build scripts
+└── README.md                  # Project documentation
 ```
+
 ---
 
-## ✍️ Example Post File
+## 🚀 Quick Start (Local Setup)
 
-Save inside `posts/first-post.md`
-
+### 1. Clone the Repository
+```bash
+git clone https://github.com/0xRohinth/blogsite.git
+cd blogsite
 ```
----
-title: "My First Blog Post"
-date: "2025-10-13"
-image: "https://picsum.photos/800/400"
-tags: ["project", "update", "blog"]
----
 
-# Welcome to my **first blog post**!  
-This site is powered by a custom static generator built with Node.js and TailwindCSS.
-
+### 2. Install Dependencies
+```bash
+npm install
 ```
+
+### 3. Build the Site
+Generate `index.html` and static post HTML pages:
+```bash
+npm run build
+```
+
+Open `index.html` in your browser to view your site locally!
+
 ---
 
-## 🛠️ What’s Inside?
+## ✍️ How to Write a Post or CTF Walkthrough
 
-- Markdown → HTML conversion via **Marked.js**
-- Front Matter parsing via **gray-matter**
-- Responsive Tailwind layout
-- Automatic dark mode toggle
+Create a new `.md` file inside the `posts/` directory.
 
+### Example CTF Walkthrough (`posts/my-target.md`)
+
+```markdown
+---
+title: "HackTheBox: Lame Machine Walkthrough"
+date: "2026-03-15"
+category: "Pwn"
+difficulty: "Easy"
+platform: "HackTheBox"
+os: "Linux"
+ip: "10.10.10.3"
+points: "20"
+tags: ["HackTheBox", "Nmap", "Samba", "Linux"]
+image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5"
+summary: "Comprehensive walkthrough of Lame from HackTheBox, exploiting Samba CVE-2007-2447."
 ---
 
-Run the build script to generate your pages:
+# Executive Summary
+
+**Lame** is a beginner-friendly Linux machine on HackTheBox requiring enumeration of Samba 3.0.20.
+
+## 1. Enumeration
 
 ```bash
-node scripts/build.js
-
+nmap -sC -sV 10.10.10.3
 ```
 
----  
-## ⚙️ Installation & Setup  
-### 1️⃣ Clone the Repository  
-```bash
- git clone https://github.com/0xRohinth/commit-to-word.git cd commit-to-word
+> [!NOTE]
+> Key Findings: Samba 3.0.20 is vulnerable to CVE-2007-2447.
 ```
 
-### 2️⃣ Install Dependencies
+### Frontmatter Options
 
-```
-npm init -y 
-npm install gray-matter marked
-npm install -D @tailwindcss/typography
-```
-
-### 3️⃣ Add Your Posts
-
-Create `.md` files in the `posts/` folder with front matter metadata.
-
-### 4️⃣ Build the Site
-
-`node scripts/build.js`
-
-✅ This generates:
-
-- `index.html` → Homepage with all post previews
-    
-- `your-post.html` → One page per post
-    
+| Field | Description | Example |
+| :--- | :--- | :--- |
+| `title` | Title of the writeup or article | `"HackTheBox: Lame"` |
+| `date` | Date published | `"2026-03-15"` |
+| `category` | Category filter | `Web`, `Pwn`, `Reverse`, `Crypto`, `Forensics`, `DevOps` |
+| `difficulty` | CTF difficulty rating | `Easy`, `Medium`, `Hard`, `Insane` |
+| `platform` | CTF platform or event | `HackTheBox`, `TryHackMe`, `PicoCTF` |
+| `os` | Target operating system | `Linux`, `Windows`, `Android` |
+| `ip` | Target machine IP address | `"10.10.10.3"` |
+| `points` | Challenge point value | `"20"` |
+| `tags` | Array of tags | `["Nmap", "Samba"]` |
+| `image` | Header image URL | `"https://..."` |
 
 ---
 
-## 🧩 Customization
+## 🌐 Deploying to GitHub Pages
 
-### 🎨 Edit Templates
-
-|Template File|Description|
-|---|---|
-|`template.html`|Homepage layout (index)|
-|`post-template.html`|Individual post layout|
-
-#### Available Placeholders:
-
-|Placeholder|Description|
-|---|---|
-|`{{title}}`|Post title|
-|`{{date}}`|Post date|
-|`{{image}}`|Featured image|
-|`{{tags}}`|Tags as badges|
-|`{{content}}`|Markdown-rendered HTML|
-
----
-
-## 🧠 How It Works
-
-1. The script reads all `.md` files from `/posts`
-    
-2. Extracts metadata using **gray-matter**
-    
-3. Converts Markdown to HTML using **marked**
-    
-4. Fills the templates with the extracted data
-    
-5. Writes:
-    
-    - A full HTML page per post
-        
-    - A combined homepage (`index.html`) listing all posts
-        
-
----
-
-## 🖼️ Example Output
-
-### ✅ Home Page
-
-Displays:
-
-- Post image thumbnail
-    
-- Title & date
-    
-- Tags as badges
-    
-- Read more → links to post page
-    
-
-### ✅ Post Page
-
-Includes:
-
-- Hero image
-    
-- Title, date, tags
-    
-- Markdown-rendered article
-    
-
----
-
-## 🛠️ Scripts
-
-|Command|Description|
-|---|---|
-|`node scripts/build.js`|Build the site manually|
-|`npm run build`|(optional) if added in package.json|
-
----
-
-## 📦 Example `package.json
-
-```json
-{
-  "name": "blog-site",
-  "version": "1.0.0",
-  "main": "scripts/build.js",
-  "scripts": {
-    "build": "node scripts/build.js"
-  },
-  "dependencies": {
-    "gray-matter": "^4.0.3",
-    "marked": "^11.1.0"
-  }
-}
-
-```
-
----
-
-## 🚀 Deployment
-
-Your output is **100% static HTML** — you can deploy it anywhere!
-
-- **GitHub Pages**
-    
-    - Push to a repo and enable Pages → “Deploy from branch”
-        
-- **Netlify / Vercel**
-    
-    - Drag & drop your folder or connect your repo
-        
-
----
-
-## 🧩 Future Roadmap
-
--  Excerpts or Previews for index
-    
--  Tag-based post filtering
-    
--  Pagination for posts
-    
--  RSS Feed generation
-    
--  Sitemap.xml builder
-    
-
----
-
-## 👨‍💻 Author
-
-**Rohit Rathna**  
-🎓 Student & Cybersecurity Enthusiast  
-🔗 [GitHub Profile](https://github.com/0xRohinth)  
-💬 Building this blog generator as part of my learning journey!
+1. Push your repository to GitHub.
+2. Go to **Repository Settings** &rarr; **Pages**.
+3. Under **Build and deployment**:
+   - Set **Source** to **GitHub Actions**.
+4. Push any new post to your `main` branch — GitHub Actions will automatically build and publish your site!
 
 ---
 
 ## 📄 License
 
-MIT License © 2025 — Free to use, modify, and share.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
+
+## 👨‍💻 Author
+
+**0xRohinth**  
+🎓 Student & Cybersecurity Researcher  
+🔗 [GitHub Profile](https://github.com/0xRohinth)
