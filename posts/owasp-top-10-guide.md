@@ -31,7 +31,10 @@ Monitor web application access logs for HTTP `403` / `401` status code spikes or
 grep -E "GET /user/profile\?id=" /var/log/nginx/access.log | grep -E " (401|403) "
 ```
 
-> [!NOTE] Key Detection Strategy: Aggregate `401` and `403` responses in your SIEM grouped by source IP and path pattern to alert on automated IDOR brute-force attempts.
+> [!NOTE]
+> Key Detection Strategy: Aggregate `401` and `403` responses in your SIEM grouped by source IP and path pattern to alert on automated IDOR brute-force attempts.
+
+---
 
 ## 2. A03:2021 – Injection (SQLi & Command Injection)
 
@@ -39,9 +42,7 @@ Unsanitized user inputs passed directly into database queries or operating syste
 
 ### Mitigation Pattern (Prepared Statements in Node.js)
 
-JavaScript
-
-```
+```javascript
 // SECURE: Parameterized Query using pg pool
 const { Pool } = require('pg');
 const pool = new Pool();
@@ -53,15 +54,15 @@ async function getUser(userId) {
 }
 ```
 
+---
+
 ## 3. Threat Hunting & SOC Log Analysis
 
 Blue teams should implement automated SIEM alert rules targeting:
 
 - Unusual web traffic spikes and high-frequency parameter fuzzing.
-    
 - Payload encoding signatures in incoming request strings (e.g., `%27`, `UNION SELECT`).
-    
 - Unexpected web server worker processes spawning underlying shell subprocesses.
-    
 
-> [!TIP] Always enforce strict parameterized queries at the data layer and correlate application logs with process-creation events on web servers to detect successful injection execution!
+> [!TIP]
+> Always enforce strict parameterized queries at the data layer and correlate application logs with process-creation events on web servers to detect successful injection execution!

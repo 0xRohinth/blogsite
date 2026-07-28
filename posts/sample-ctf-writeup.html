@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HackTheBox: Lame Machine Walkthrough // 0xRohinth CTF Writeup</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <body class="hacker-bg-grid min-h-screen flex flex-col text-slate-200">
 
@@ -20,12 +20,15 @@
 
         <!-- Navigation Header -->
         <header class="flex justify-between items-center py-6 border-b border-slate-800">
-            <a href="index.html" class="flex items-center gap-2 text-xl font-bold font-mono text-white tracking-wider hover:text-cyan-400 transition-colors">
+            <a href="../index.html" class="flex items-center gap-2 text-xl font-bold font-mono text-white tracking-wider hover:text-cyan-400 transition-colors">
                 <span class="text-cyan-400">&gt;</span> 0xRohinth<span class="animate-pulse text-emerald-400">_</span>
             </a>
-            <a href="index.html" class="text-sm font-mono text-cyan-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
-                &larr; ./back_to_index
-            </a>
+            <div class="flex items-center gap-4 text-sm font-mono">
+                <a href="../portfolio.html" class="text-slate-400 hover:text-cyan-400 transition-colors">./portfolio</a>
+                <a href="../index.html" class="text-cyan-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
+                    &larr; ./back_to_index
+                </a>
+            </div>
         </header>
 
         <main class="py-8">
@@ -164,7 +167,7 @@ cat /root/root.txt
 
                 <!-- Article Footer / Navigation -->
                 <footer class="mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-mono">
-                    <a href="index.html" class="text-cyan-400 hover:text-emerald-400 transition-colors">
+                    <a href="../index.html" class="text-cyan-400 hover:text-emerald-400 transition-colors">
                         &larr; Back to all writeups
                     </a>
                     <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="filter-btn">
@@ -207,8 +210,8 @@ cat /root/root.txt
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const originalText = button.innerText;
                 button.innerText = 'COPIED!';
-                button.style.backgroundColor = '#00ff9d';
-                button.style.color = '#000';
+                button.style.backgroundColor = '#3fb950';
+                button.style.color = '#0d1117';
 
                 setTimeout(() => {
                     button.innerText = originalText;

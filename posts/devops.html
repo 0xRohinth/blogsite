@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><!-- POST_TITLE --> // 0xRohinth CTF Writeup</title>
+    <title>CI/CD Pipeline Security & Automation Guide // 0xRohinth CTF Writeup</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/main.css">
 </head>
@@ -36,35 +36,99 @@
                 <!-- Article Header -->
                 <header class="mb-8 pb-6 border-b border-slate-800">
                     <div class="flex items-center gap-3 mb-4">
-                        <span class="category-tag"><!-- POST_CATEGORY --></span>
+                        <span class="category-tag">DevOps</span>
                         <span class="text-xs font-mono text-slate-500">//</span>
-                        <span class="text-xs font-mono text-slate-400"><!-- POST_READ_TIME --></span>
+                        <span class="text-xs font-mono text-slate-400">2 min read</span>
                     </div>
 
                     <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
-                        <!-- POST_TITLE -->
+                        CI/CD Pipeline Security & Automation Guide
                     </h1>
 
                     <div class="flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-400 pt-2">
                         <div class="flex items-center gap-2">
                             <span>PUBLISHED:</span>
-                            <span class="text-cyan-400"><!-- POST_DATE --></span>
+                            <span class="text-cyan-400">2026-01-14</span>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <!-- POST_TAGS -->
+                            <span class="category-tag">#CI-CD</span> <span class="category-tag">#GitHub-Actions</span> <span class="category-tag">#Automation</span> <span class="category-tag">#Security</span>
                         </div>
                     </div>
                 </header>
 
                 <!-- CTF Machine Specs Box (if present) -->
-                <!-- POST_SPECS -->
+                
+    <div class="ctf-specs-grid">
+      <div class="ctf-spec-item"><span class="ctf-spec-label">PLATFORM</span><span class="ctf-spec-value">DevOps / SecOps</span></div>
+      
+      
+      
+      <div class="ctf-spec-item"><span class="ctf-spec-label">DIFFICULTY</span><span class="ctf-spec-value"><span class="cyber-badge badge-diff-medium">medium</span></span></div>
+    </div>
 
                 <!-- Optional Hero Image -->
-                <!-- HERO_IMAGE -->
+                
+  <div class="mb-8 rounded-lg overflow-hidden border border-slate-700 shadow-xl">
+    <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=1000&auto=format&fit=crop" alt="CI/CD Pipeline Security & Automation Guide" onclick="openLightbox(this.src)" class="w-full h-64 md:h-80 object-cover cursor-pointer hover:scale-105 transition-transform duration-300" />
+  </div>
 
                 <!-- Article Content -->
                 <div class="post-content">
-                    <!-- POST_CONTENT -->
+                    <h1>How Does a Security-Focused CI/CD Pipeline Work?</h1>
+<p>If you’ve worked with modern software development or security engineering, you’ve probably heard the term <strong>CI/CD pipeline</strong>.  </p>
+<p>Beyond shipping code fast, automated pipelines are critical for <strong>security scanning, vulnerability checks, and automated deployment</strong>.</p>
+<hr>
+<h2>1. What Is CI/CD?</h2>
+<ul>
+<li><strong>CI (Continuous Integration)</strong>: Merging code frequently into a shared repository while automatically running test suites and linters.</li>
+<li><strong>CD (Continuous Delivery / Deployment)</strong>: Automatically packaging and releasing tested code to production or staging environments.</li>
+</ul>
+<hr>
+<h2>2. Typical Security Pipeline Stages</h2>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">TEXT</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-text">[ Developer Push ] ──&gt; [ Lint &amp; Build ] ──&gt; [ SAST Scan ] ──&gt; [ Unit Tests ] ──&gt; [ Container Audit ] ──&gt; [ Deploy ]</code></pre>
+  </div><h3>Key Stages Explained</h3>
+<ol>
+<li><strong>Source Code Check-In</strong>: Triggers GitHub Actions or GitLab CI.</li>
+<li><strong>SAST (Static Analysis)</strong>: Scans code for hardcoded secrets, API keys, or SQL injection flaws (e.g., using <code>semgrep</code> or <code>Trivy</code>).</li>
+<li><strong>Automated Testing</strong>: Runs unit tests and API integration tests.</li>
+<li><strong>Dependency Scanning</strong>: Checks <code>package.json</code> or <code>requirements.txt</code> against known CVE databases.</li>
+<li><strong>Deployment</strong>: Pushes containerized build to cloud infrastructure.</li>
+</ol>
+<hr>
+<h2>3. Example GitHub Actions Workflow</h2>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">YAML</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-yaml">name: Security Audit &amp; Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run Secret Detection
+        run: npx secretlint &quot;**/*&quot;
+      - name: Execute Tests
+        run: npm test</code></pre>
+  </div><blockquote>
+<p>[!TIP]<br>Never store raw secrets in repository code! Always use repository secrets (<code>SECRETS.GITHUB_TOKEN</code>) or hashicorp vault.</p>
+</blockquote>
+
                 </div>
 
                 <!-- Article Footer / Navigation -->

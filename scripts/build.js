@@ -8,6 +8,7 @@ const postsDir = path.join(__dirname, '../posts');
 const outputDir = path.join(__dirname, '../');
 const templatePath = path.join(__dirname, '../template.html');
 const postTemplatePath = path.join(__dirname, '../post-template.html');
+const portfolioTemplatePath = path.join(__dirname, '../portfolio-template.html');
 
 // Read main templates
 const mainTemplate = fs.readFileSync(templatePath, 'utf-8');
@@ -18,7 +19,6 @@ const renderer = new marked.Renderer();
 
 renderer.code = function (code, language) {
   const validLang = language || 'code';
-  // Escape html in code
   const escapedCode = code
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -135,11 +135,11 @@ files.forEach(file => {
     .replace('<!-- POST_TAGS -->', tagsHtml)
     .replace('<!-- POST_CONTENT -->', htmlContent);
 
-  // Save the post HTML
-  const outputFilePath = path.join(outputDir, `${slug}.html`);
+  // Save the post HTML INSIDE the posts/ folder for a clean, organized repo root
+  const outputFilePath = path.join(postsDir, `${slug}.html`);
   fs.writeFileSync(outputFilePath, postHtml);
 
-  // Collect metadata for homepage index
+  // Collect metadata for homepage index (pointing to posts/slug.html)
   postsData.push({
     title,
     date: formattedDate,
@@ -150,7 +150,7 @@ files.forEach(file => {
     summary,
     tags,
     image,
-    link: `${slug}.html`
+    link: `posts/${slug}.html`
   });
 });
 
@@ -202,7 +202,7 @@ const statsHtml = `
     </div>
     <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-lg text-center">
       <div class="text-xs font-mono text-slate-400 uppercase">THEME</div>
-      <div class="text-2xl font-mono font-bold text-purple-400 mt-1">DARK // CYBER</div>
+      <div class="text-2xl font-mono font-bold text-purple-400 mt-1">BLUE TEAM // MATRIX</div>
     </div>
     <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-lg text-center">
       <div class="text-xs font-mono text-slate-400 uppercase">STATUS</div>
@@ -219,4 +219,11 @@ const finalIndex = mainTemplate
 // Write index.html
 fs.writeFileSync(path.join(outputDir, 'index.html'), finalIndex);
 
-console.log(`Build complete! Processed ${files.length} markdown post(s).`);
+// Generate portfolio.html if template exists
+if (fs.existsSync(portfolioTemplatePath)) {
+  const portfolioHtml = fs.readFileSync(portfolioTemplatePath, 'utf-8');
+  fs.writeFileSync(path.join(outputDir, 'portfolio.html'), portfolioHtml);
+  console.log('Generated portfolio.html page');
+}
+
+console.log(`Build complete! Processed ${files.length} markdown post(s). Generated HTML pages inside posts/ directory.`);

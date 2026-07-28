@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CI/CD Pipeline Security & Automation Guide // 0xRohinth CTF Writeup</title>
+    <title>OWASP Top 10 Security Guide for Blue Teams // 0xRohinth CTF Writeup</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <body class="hacker-bg-grid min-h-screen flex flex-col text-slate-200">
 
@@ -20,12 +20,15 @@
 
         <!-- Navigation Header -->
         <header class="flex justify-between items-center py-6 border-b border-slate-800">
-            <a href="index.html" class="flex items-center gap-2 text-xl font-bold font-mono text-white tracking-wider hover:text-cyan-400 transition-colors">
+            <a href="../index.html" class="flex items-center gap-2 text-xl font-bold font-mono text-white tracking-wider hover:text-cyan-400 transition-colors">
                 <span class="text-cyan-400">&gt;</span> 0xRohinth<span class="animate-pulse text-emerald-400">_</span>
             </a>
-            <a href="index.html" class="text-sm font-mono text-cyan-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
-                &larr; ./back_to_index
-            </a>
+            <div class="flex items-center gap-4 text-sm font-mono">
+                <a href="../portfolio.html" class="text-slate-400 hover:text-cyan-400 transition-colors">./portfolio</a>
+                <a href="../index.html" class="text-cyan-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
+                    &larr; ./back_to_index
+                </a>
+            </div>
         </header>
 
         <main class="py-8">
@@ -39,16 +42,16 @@
                     </div>
 
                     <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
-                        CI/CD Pipeline Security & Automation Guide
+                        OWASP Top 10 Security Guide for Blue Teams
                     </h1>
 
                     <div class="flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-400 pt-2">
                         <div class="flex items-center gap-2">
                             <span>PUBLISHED:</span>
-                            <span class="text-cyan-400">2026-01-14</span>
+                            <span class="text-cyan-400">2025-06-01</span>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <span class="category-tag">#CI-CD</span> <span class="category-tag">#GitHub-Actions</span> <span class="category-tag">#Automation</span> <span class="category-tag">#Security</span>
+                            <span class="category-tag">#OWASP</span> <span class="category-tag">#WebSecurity</span> <span class="category-tag">#BlueTeam</span> <span class="category-tag">#SOC</span> <span class="category-tag">#Defensive</span>
                         </div>
                     </div>
                 </header>
@@ -56,81 +59,75 @@
                 <!-- CTF Machine Specs Box (if present) -->
                 
     <div class="ctf-specs-grid">
-      <div class="ctf-spec-item"><span class="ctf-spec-label">PLATFORM</span><span class="ctf-spec-value">DevOps / SecOps</span></div>
-      
-      
-      
+      <div class="ctf-spec-item"><span class="ctf-spec-label">PLATFORM</span><span class="ctf-spec-value">Knowledge Base</span></div>
+      <div class="ctf-spec-item"><span class="ctf-spec-label">OPERATING SYSTEM</span><span class="ctf-spec-value">Cross-Platform</span></div>
+      <div class="ctf-spec-item"><span class="ctf-spec-label">TARGET IP</span><span class="ctf-spec-value text-cyan-400">N/A</span></div>
+      <div class="ctf-spec-item"><span class="ctf-spec-label">POINTS</span><span class="ctf-spec-value text-emerald-400">N/A</span></div>
       <div class="ctf-spec-item"><span class="ctf-spec-label">DIFFICULTY</span><span class="ctf-spec-value"><span class="cyber-badge badge-diff-medium">medium</span></span></div>
     </div>
 
                 <!-- Optional Hero Image -->
                 
   <div class="mb-8 rounded-lg overflow-hidden border border-slate-700 shadow-xl">
-    <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=1000&auto=format&fit=crop" alt="CI/CD Pipeline Security & Automation Guide" onclick="openLightbox(this.src)" class="w-full h-64 md:h-80 object-cover cursor-pointer hover:scale-105 transition-transform duration-300" />
+    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop" alt="OWASP Top 10 Security Guide for Blue Teams" onclick="openLightbox(this.src)" class="w-full h-64 md:h-80 object-cover cursor-pointer hover:scale-105 transition-transform duration-300" />
   </div>
 
                 <!-- Article Content -->
                 <div class="post-content">
-                    <h1>How Does a Security-Focused CI/CD Pipeline Work?</h1>
-<p>If you’ve worked with modern software development or security engineering, you’ve probably heard the term <strong>CI/CD pipeline</strong>.  </p>
-<p>Beyond shipping code fast, automated pipelines are critical for <strong>security scanning, vulnerability checks, and automated deployment</strong>.</p>
+                    <h1>Executive Summary</h1>
+<p>Understanding application security vulnerabilities from a defensive perspective is critical for SOC Analysts and Security Engineers. This writeup breaks down key <strong>OWASP Top 10</strong> vulnerabilities, detection signatures, and remediation practices for modern web environments.</p>
 <hr>
-<h2>1. What Is CI/CD?</h2>
-<ul>
-<li><strong>CI (Continuous Integration)</strong>: Merging code frequently into a shared repository while automatically running test suites and linters.</li>
-<li><strong>CD (Continuous Delivery / Deployment)</strong>: Automatically packaging and releasing tested code to production or staging environments.</li>
-</ul>
-<hr>
-<h2>2. Typical Security Pipeline Stages</h2>
+<h2>1. A01:2021 – Broken Access Control</h2>
+<p>Flaws allowing users to access unauthorized resources or perform actions outside their intended permissions (e.g., IDOR, privilege escalation).</p>
+<h3>Defensive Detection Rule (Log Pattern)</h3>
+<p>Monitor web application access logs for HTTP <code>403</code> / <code>401</code> status code spikes originating from single IP addresses attempting sequential resource IDs:</p>
 
   <div class="code-wrapper">
     <div class="code-wrapper-header">
-      <span class="font-mono text-xs text-cyan-400">TEXT</span>
+      <span class="font-mono text-xs text-cyan-400">BASH</span>
       <button class="copy-btn" onclick="copyCode(this)">COPY</button>
     </div>
-    <pre><code class="language-text">[ Developer Push ] ──&gt; [ Lint &amp; Build ] ──&gt; [ SAST Scan ] ──&gt; [ Unit Tests ] ──&gt; [ Container Audit ] ──&gt; [ Deploy ]</code></pre>
-  </div><h3>Key Stages Explained</h3>
-<ol>
-<li><strong>Source Code Check-In</strong>: Triggers GitHub Actions or GitLab CI.</li>
-<li><strong>SAST (Static Analysis)</strong>: Scans code for hardcoded secrets, API keys, or SQL injection flaws (e.g., using <code>semgrep</code> or <code>Trivy</code>).</li>
-<li><strong>Automated Testing</strong>: Runs unit tests and API integration tests.</li>
-<li><strong>Dependency Scanning</strong>: Checks <code>package.json</code> or <code>requirements.txt</code> against known CVE databases.</li>
-<li><strong>Deployment</strong>: Pushes containerized build to cloud infrastructure.</li>
-</ol>
-<hr>
-<h2>3. Example GitHub Actions Workflow</h2>
-
-  <div class="code-wrapper">
-    <div class="code-wrapper-header">
-      <span class="font-mono text-xs text-cyan-400">YAML</span>
-      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
-    </div>
-    <pre><code class="language-yaml">name: Security Audit &amp; Build
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  security-audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run Secret Detection
-        run: npx secretlint &quot;**/*&quot;
-      - name: Execute Tests
-        run: npm test</code></pre>
+    <pre><code class="language-bash"># Grep access logs for unauthorized IDOR enumeration
+grep -E &quot;GET /user/profile\?id=&quot; /var/log/nginx/access.log | grep -E &quot; (401|403) &quot;</code></pre>
   </div><blockquote>
-<p>[!TIP]<br>Never store raw secrets in repository code! Always use repository secrets (<code>SECRETS.GITHUB_TOKEN</code>) or hashicorp vault.</p>
+<p>[!NOTE]<br>Key Detection Strategy: Aggregate <code>401</code> and <code>403</code> responses in your SIEM grouped by source IP and path pattern to alert on automated IDOR brute-force attempts.</p>
+</blockquote>
+<hr>
+<h2>2. A03:2021 – Injection (SQLi &amp; Command Injection)</h2>
+<p>Unsanitized user inputs passed directly into database queries or operating system shell execution contexts allow remote code execution or data exfiltration.</p>
+<h3>Mitigation Pattern (Prepared Statements in Node.js)</h3>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">JAVASCRIPT</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-javascript">// SECURE: Parameterized Query using pg pool
+const { Pool } = require(&#039;pg&#039;);
+const pool = new Pool();
+
+async function getUser(userId) {
+  const query = &#039;SELECT id, username, email FROM users WHERE id = $1&#039;;
+  const res = await pool.query(query, [userId]);
+  return res.rows[0];
+}</code></pre>
+  </div><hr>
+<h2>3. Threat Hunting &amp; SOC Log Analysis</h2>
+<p>Blue teams should implement automated SIEM alert rules targeting:</p>
+<ul>
+<li>Unusual web traffic spikes and high-frequency parameter fuzzing.</li>
+<li>Payload encoding signatures in incoming request strings (e.g., <code>%27</code>, <code>UNION SELECT</code>).</li>
+<li>Unexpected web server worker processes spawning underlying shell subprocesses.</li>
+</ul>
+<blockquote>
+<p>[!TIP]<br>Always enforce strict parameterized queries at the data layer and correlate application logs with process-creation events on web servers to detect successful injection execution!</p>
 </blockquote>
 
                 </div>
 
                 <!-- Article Footer / Navigation -->
                 <footer class="mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-mono">
-                    <a href="index.html" class="text-cyan-400 hover:text-emerald-400 transition-colors">
+                    <a href="../index.html" class="text-cyan-400 hover:text-emerald-400 transition-colors">
                         &larr; Back to all writeups
                     </a>
                     <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="filter-btn">
@@ -173,8 +170,8 @@ jobs:
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const originalText = button.innerText;
                 button.innerText = 'COPIED!';
-                button.style.backgroundColor = '#00ff9d';
-                button.style.color = '#000';
+                button.style.backgroundColor = '#3fb950';
+                button.style.color = '#0d1117';
 
                 setTimeout(() => {
                     button.innerText = originalText;
