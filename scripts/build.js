@@ -219,11 +219,4 @@ const finalIndex = mainTemplate
 // Write index.html
 fs.writeFileSync(path.join(outputDir, 'index.html'), finalIndex);
 
-// Generate portfolio.html if template exists
-if (fs.existsSync(portfolioTemplatePath)) {
-  const portfolioHtml = fs.readFileSync(portfolioTemplatePath, 'utf-8');
-  fs.writeFileSync(path.join(outputDir, 'portfolio.html'), portfolioHtml);
-  console.log('Generated portfolio.html page');
-}
-
 console.log(`Build complete! Processed ${files.length} markdown post(s). Generated HTML pages inside posts/ directory.`);
